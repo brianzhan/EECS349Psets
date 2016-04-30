@@ -15,26 +15,24 @@ def ID3(data_set, attribute_metadata, numerical_splits_count, depth):
     ========================================================================================================
 
     '''
+    node = Node() # new node
     entropy_bound = 0.15 # entropy of data_set must be below bound to become a leaf
-    if entropy(data_set) < entropy_bound or depth == 0:
-        node = Node() # create a new node leaf
+    if entropy(data_set) < entropy_bound or depth == 0: 
         node.label = mode(data_set)
         return node
     pick_best = pick_best_attribute(data_set, attribute_metadata, numerical_splits_count) # tuple
     best_attribute = pick_best[0] # best attribute to split on
     split_value = pick_best[1] # best value to split on
-    if split_value is not False: # if there is a split value (best_attribute is numeric)
+    if split_value is not False: # if there is a split value (best attribute is numeric)
         split_data = split_on_numerical(data_set, best_attribute, split_value) # splitting data by split value (lesser, greater)
-        node = Node()
         node.is_nominal = False # node is numeric
         node.splitting_value = split_value # best value to split on
-        node.children[1] = ID3(split_data[0], attribute_metadata, numerical_splits_count, depth - 1) # less than split value
-        node.children[2] = ID3(split_data[1], attribute_metadata, numerical_splits_count, depth - 1) # greater than split value
+        node.children[0] = ID3(split_data[0], attribute_metadata, numerical_splits_count, depth - 1) # less than split value
+        node.children[1] = ID3(split_data[1], attribute_metadata, numerical_splits_count, depth - 1) # greater than split value
         node.name = attribute_metadata[best_attribute]['name']
         node.decision_attribute = best_attribute # best attribute to split on
     else: # best_attribute is nominal
         split_data = split_on_nominal(data_set, best_attribute) # returns a dictionary with nominal attributes as keys
-        node = Node()
         node.is_nominal = True # node is nominal
         i = 1
         for key in split_data: # add a children for each nominal attribute
@@ -42,6 +40,8 @@ def ID3(data_set, attribute_metadata, numerical_splits_count, depth):
             i += 1
         node.name = attribute_metadata[best_attribute]['name']
         node.decision_attribute = best_attribute
+    print node.children
+    return node
 
 def check_homogenous(data_set):
     '''
@@ -94,10 +94,11 @@ def pick_best_attribute(data_set, attribute_metadata, numerical_splits_count):
             gain_ratios[i] = gain_ratio
     # go through each attribute's gain ratio and find the highest one
     for key, value in gain_ratios.iteritems(): 
-        if value[0] > highest_ratio:
-            highest_ratio = value[0]
-            best_attribute = key
-    if best_attribute == 0 or numerical_splits_count[best_attribute] == 0:
+        if numerical_splits_count[key] is not 0: # can still split on this attribute
+            if value[0] > highest_ratio:
+                highest_ratio = value[0]
+                best_attribute = key
+    if best_attribute == 0: # if gain ratio of all attributes is 0
         return (False, False)
     numerical_splits_count[best_attribute] -= 1
     return (best_attribute, gain_ratios[best_attribute][1])
