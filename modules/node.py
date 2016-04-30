@@ -40,7 +40,17 @@ def check_dnf():
     n.children = {0: n0, 1: n1}
     n0.children = {0: n2, 1: n3}
     n.print_dnf_tree()
-    
+"""
+                n
+               / \ 
+              n0  n1
+             / \  
+            n2 n3
+
+            5 AND 0 AND 2
+            5 AND 0 AND 3
+            5 AND 1
+"""    
 
 def dnf_helper(child):
     for c in child:
@@ -97,20 +107,28 @@ class Node:
         '''
         returns the disjunct normalized form of the tree.
         '''
-        print self.label, " AND ",
-        if self.children[0] != {}:
+        leftChild=1
+        rightChild=1
+        try:
+            self.children[0]
+        except KeyError:
+            leftChild = 0
+        try:
+            self.children[1]
+        except KeyError:
+            rightChild = 0
+        if leftChild is 0 and rightChild is 0:
+            print self.label, " OR "
+        else:
+            print self.label, " AND ",
+
+        if leftChild is 1 and self.children[0] != {}:
             newChild = self.children[0]
             print newChild.print_dnf_tree()
-            #print "should return next as ", newChild.label
-        # might need to print OR here
-        if self.children[1] != {}:
-            #print "child 1 has child ", self.children[1].label
+        if rightChild is 1 and self.children[1] != {}:
             newChild = self.children[1]
             print newChild.print_dnf_tree()
 
-
-            #print dnf_helper(child)
-            #print " OR "
 
 def main():
     check_dnf()
