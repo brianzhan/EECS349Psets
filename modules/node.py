@@ -76,14 +76,14 @@ class Node:
             return self.children[instance[self.decision_attribute]].classify(instance)
         else:            #numerical 
             if instance[self.decision_attribute] < self.splitting_value and self.children[0] != None:
-                print "classifying numerical, classifying children of ", self.children
-                print "instance is ", instance
+                # print "classifying numerical, classifying children of ", self.children
+                # print "instance is ", instance
                 return self.children[0].classify(instance)
             elif self.children[1] != None:
-                print "classifying nominal"
+                # print "classifying nominal"
                 return self.children[1].classify(instance)
             else:
-                print "classify failed, returning none"
+                # print "classify failed, returning none"
                 return None
 
     def print_tree(self, indent = 0):
