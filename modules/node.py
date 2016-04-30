@@ -20,33 +20,32 @@
 #
 # name - name of the attribute being split on
 
-def check_classify():
+def check_dnf():
     n0 = Node()
-    n0.label = 1
-    i = 0;
-    if n0.classify([0, 1, 2]) == 1:
-        print "Passed 1"
-        i += 1
-    else:
-        print "Failed 1"
+    n0.label = 0
+
     n1 = Node()
-    n1.label = 0
+    n1.label = 1
+
+    n2 = Node()
+    n2.label = 2
+
+    n3 = Node()
+    n3.label = 3
+
     n = Node()
-    n.label = None
+    n.label = 5
     n.decision_attribute = 1
     n.is_nominal = True
-    n.name = "You saw the attributes what do you think?"
-    n.children = {1: n0, 2: n1}
-    if n.classify([0, 2]) == 0:
-        print "Passed 2"
-        i += 1
-    else:
-        print "Failed 2"
-    if i == 2:
-        print "All tests passed"
-    else:
-        print "Not all tests passed, look at classify"
+    n.children = {0: n0, 1: n1}
+    n0.children = {0: n2, 1: n3}
+    n.print_dnf_tree()
+    
 
+def dnf_helper(child):
+    for c in child:
+        print "child: ", c
+        print " OR "
 
 class Node:
     def __init__(self):
@@ -76,14 +75,14 @@ class Node:
             return self.children[instance[self.decision_attribute]].classify(instance)
         else:            #numerical 
             if instance[self.decision_attribute] < self.splitting_value and self.children[0] != None:
-                print "classifying numerical, classifying children of ", self.children
-                print "instance is ", instance
+                # print "classifying numerical, classifying children of ", self.children
+                # print "instance is ", instance
                 return self.children[0].classify(instance)
             elif self.children[1] != None:
-                print "classifying nominal"
+                # print "classifying nominal"
                 return self.children[1].classify(instance)
             else:
-                print "classify failed, returning none"
+                # print "classify failed, returning none"
                 return None
 
     def print_tree(self, indent = 0):
@@ -98,4 +97,27 @@ class Node:
         '''
         returns the disjunct normalized form of the tree.
         '''
-        pass
+        print self.label, " AND ",
+        if self.children[0] != {}:
+            newChild = self.children[0]
+            print newChild.print_dnf_tree()
+            #print "should return next as ", newChild.label
+        # might need to print OR here
+        if self.children[1] != {}:
+            #print "child 1 has child ", self.children[1].label
+            newChild = self.children[1]
+            print newChild.print_dnf_tree()
+
+
+            #print dnf_helper(child)
+            #print " OR "
+
+def main():
+    check_dnf()
+
+if __name__ == "__main__":
+    main()
+
+
+
+

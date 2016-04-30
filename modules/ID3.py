@@ -17,12 +17,12 @@ def ID3(data_set, attribute_metadata, numerical_splits_count, depth):
     '''
     node = Node() # new node
     entropy_bound = 0.15 # entropy of data_set must be below bound to become a leaf
-    if entropy(data_set) < entropy_bound or depth == 0: 
-        node.label = mode(data_set)
-        return node
     pick_best = pick_best_attribute(data_set, attribute_metadata, numerical_splits_count) # tuple
     best_attribute = pick_best[0] # best attribute to split on
     split_value = pick_best[1] # best value to split on
+    if entropy(data_set) < entropy_bound or depth == 0 or best_attribute == False: 
+        node.label = mode(data_set)
+        return node
     if split_value is not False: # if there is a split value (best attribute is numeric)
         split_data = split_on_numerical(data_set, best_attribute, split_value) # splitting data by split value (lesser, greater)
         node.is_nominal = False # node is numeric
@@ -40,7 +40,7 @@ def ID3(data_set, attribute_metadata, numerical_splits_count, depth):
             i += 1
         node.name = attribute_metadata[best_attribute]['name']
         node.decision_attribute = best_attribute
-    print node.children
+    # print node.children
     return node
 
 def check_homogenous(data_set):
@@ -361,3 +361,10 @@ def split_on_numerical(data_set, attribute, splitting_value):
 # split_on_numerical(d_set,a,sval) == ([[1, 0.25], [1, 0.19], [1, 0.34], [1, 0.19]],[[1, 0.89], [0, 0.93], [0, 0.48], [1, 0.49], [0, 0.6], [0, 0.6]])
 # d_set,a,sval = [[0, 0.91], [0, 0.84], [1, 0.82], [1, 0.07], [0, 0.82],[0, 0.59], [0, 0.87], [0, 0.17], [1, 0.05], [1, 0.76]],1,0.17
 # split_on_numerical(d_set,a,sval) == ([[1, 0.07], [1, 0.05]],[[0, 0.91],[0, 0.84], [1, 0.82], [0, 0.82], [0, 0.59], [0, 0.87], [0, 0.17], [1, 0.76]])
+
+
+# attribute_metadata = [{'name': "winner",'is_nominal': True},{'name': "opprundifferential",'is_nominal': False}]
+# data_set = [[1, 0.27], [0, 0.42], [0, 0.86], [0, 0.68], [0, 0.04], [1, 0.01], [1, 0.33], [1, 0.42], [1, 0.42], [0, 0.51], [1, 0.4]]
+# numerical_splits_count = [1, 1]
+# n = ID3(data_set, attribute_metadata, numerical_splits_count, 5)
+# print n.children[0].label
