@@ -107,6 +107,7 @@ class Node:
         '''
         returns the disjunct normalized form of the tree.
         '''
+        # handle tree end exceptions
         leftChild=1
         rightChild=1
         try:
@@ -117,6 +118,7 @@ class Node:
             self.children[1]
         except KeyError:
             rightChild = 0
+        # print trees
         if leftChild is 0 and rightChild is 0:
             print self.label, " OR "
         else:
@@ -124,10 +126,10 @@ class Node:
 
         if leftChild is 1 and self.children[0] != {}:
             newChild = self.children[0]
-            print newChild.print_dnf_tree()
+            newChild.print_dnf_tree()
         if rightChild is 1 and self.children[1] != {}:
             newChild = self.children[1]
-            print newChild.print_dnf_tree()
+            newChild.print_dnf_tree()
 
 
 def main():
