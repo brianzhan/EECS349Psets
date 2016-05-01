@@ -130,17 +130,46 @@ class Node:
                 rightChild = 0
 
             if leftChild is 0 and rightChild is 0:
-                print "path is ", path
+                print path, " OR "
             if leftChild is 1:
-                rightStr = path + " -> " +str(current.children[0].label)
+                rightStr = path + " AND " +str(current.children[0].label)
                 s.append(current.children[0])
                 s.append(rightStr)
             if rightChild is 1:
-                leftStr = path + " -> " + str(current.children[1].label)
+                leftStr = path + " AND " + str(current.children[1].label)
                 s.append(current.children[1])
                 s.append(leftStr)
 
 
+
+
+    def old_print_dnf(self):
+        '''
+        returns the disjunct normalized form of the tree.
+        '''
+        # handle tree end exceptions
+        leftChild=1
+        rightChild=1
+        try:
+            self.children[0]
+        except KeyError:
+            leftChild = 0
+        try:
+            self.children[1]
+        except KeyError:
+            rightChild = 0
+        # print trees
+        if leftChild is 0 and rightChild is 0:
+            print self.label, " OR "
+        else:
+            print self.label, " AND ",
+
+        if leftChild is 1 and self.children[0] != {}:
+            newChild = self.children[0]
+            newChild.print_dnf_tree()
+        if rightChild is 1 and self.children[1] != {}:
+            newChild = self.children[1]
+            newChild.print_dnf_tree()
 
 def main():
     check_dnf()
