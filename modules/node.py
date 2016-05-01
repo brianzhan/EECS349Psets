@@ -103,33 +103,43 @@ class Node:
         pass
 
 
+
+
     def print_dnf_tree(self):
         '''
         returns the disjunct normalized form of the tree.
         '''
-        # handle tree end exceptions
-        leftChild=1
-        rightChild=1
-        try:
-            self.children[0]
-        except KeyError:
-            leftChild = 0
-        try:
-            self.children[1]
-        except KeyError:
-            rightChild = 0
-        # print trees
-        if leftChild is 0 and rightChild is 0:
-            print self.label, " OR "
-        else:
-            print self.label, " AND ",
+        current = self
+        s = []
+        s.append(current)
+        s.append(str(current.label))
+        while s and s != []: # s is empty
+            path = s.pop()
+            current = s.pop()
 
-        if leftChild is 1 and self.children[0] != {}:
-            newChild = self.children[0]
-            newChild.print_dnf_tree()
-        if rightChild is 1 and self.children[1] != {}:
-            newChild = self.children[1]
-            newChild.print_dnf_tree()
+            # find out whether childs exist
+            leftChild=1
+            rightChild=1
+            try:
+                current.children[0]
+            except KeyError:
+                leftChild = 0
+            try:
+                current.children[1]
+            except KeyError:
+                rightChild = 0
+
+            if leftChild is 0 and rightChild is 0:
+                print "path is ", path
+            if leftChild is 1:
+                rightStr = path + " -> " +str(current.children[0].label)
+                s.append(current.children[0])
+                s.append(rightStr)
+            if rightChild is 1:
+                leftStr = path + " -> " + str(current.children[1].label)
+                s.append(current.children[1])
+                s.append(leftStr)
+
 
 
 def main():
