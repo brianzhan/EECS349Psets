@@ -34,10 +34,8 @@ def ID3(data_set, attribute_metadata, numerical_splits_count, depth):
     else: # best_attribute is nominal
         split_data = split_on_nominal(data_set, best_attribute) # returns a dictionary with nominal attributes as keys
         node.is_nominal = True # node is nominal
-        i = 1
         for key in split_data: # add a children for each nominal attribute
-            node.children[i] = ID3(split_data[key], attribute_metadata, numerical_splits_count, depth - 1)
-            i += 1
+            node.children[key] = ID3(split_data[key], attribute_metadata, numerical_splits_count, depth - 1)
         node.name = attribute_metadata[best_attribute]['name']
         node.decision_attribute = best_attribute
     # print node.children
@@ -190,75 +188,24 @@ def gain_ratio_nominal(data_set, attribute):
     Output: Returns gain_ratio. See Textbook for formula
     ========================================================================================================
     '''
-    gain = entropy(data_set) # information gain
-    intrinsic = 0
-    attributes = {} # tracks the number of classified 1's and 0's for each attribute (dictionary of dictionaries)
-    total_variables = 0
-    for data in data_set:
-        variable = data[0] # the classification
-        nominal_attribute = data[attribute] # the nominal attribute
-        # tracking the amount of 0 and 1 classifications for each nominal attribute
-        if nominal_attribute not in attributes:
-            if variable == 1:
-                attributes[nominal_attribute] = [[1]]
-            else:
-                attributes[nominal_attribute] = [[0]]
-        else:
-            if variable == 1:
-                attributes[nominal_attribute].append([1])
-            else:
-                attributes[nominal_attribute].append([0])
-        total_variables += 1 
-    for key, frequency in attributes.iteritems():
-        entropy_attribute = entropy(attributes[key]) 
-        attribute_count = len(attributes[key]) 
-        fraction = float(attribute_count)/float(total_variables)
-        gain -= fraction * entropy_attribute
-        intrinsic -= fraction * math.log(fraction, 2)
-    return gain/intrinsic
+    mag_total = len(data_set)
+    split = split_on_nominal(data_set,attribute)
+    num_subsets = len(split)
+    gain_sum = 0
+    intrinsic_value = 0
+    information_gain_ratio = -10000
 
-# ======== Test case =============================
-# data_set, attr = [[1, 2], [1, 0], [1, 0], [0, 2], [0, 2], [0, 0], [1, 3], [0, 4], [0, 3], [1, 1]], 1
-# gain_ratio_nominal(data_set,attr) == 0.11470666361703151
-# data_set, attr = [[1, 2], [1, 2], [0, 4], [0, 0], [0, 1], [0, 3], [0, 0], [0, 0], [0, 4], [0, 2]], 1
-# gain_ratio_nominal(data_set,attr) == 0.2056423328155741
-# data_set, attr = [[0, 3], [0, 3], [0, 3], [0, 4], [0, 4], [0, 4], [0, 0], [0, 2], [1, 4], [0, 4]], 1
-# gain_ratio_nominal(data_set,attr) == 0.06409559743967516
+    for x in split:
+        mag_subset = len(split[x])
+        gain_sum += float(mag_subset)/float(mag_total)* entropy(split[x])
+        intrinsic_value += float(mag_subset)/float(mag_total)*math.log(float(mag_subset)/float(mag_total),2)
 
-# def gain_ratio_numeric(data_set, attribute, steps):
-#     '''
-#     ========================================================================================================
-#     Input:  Subset of data set, the index for a numeric attribute, and a step size for normalizing the data.
-#     ========================================================================================================
-#     Job:    Calculate the gain_ratio_numeric and find the best single threshold value
-#             The threshold will be used to split examples into two sets
-#                  those with attribute value GREATER THAN OR EQUAL TO threshold
-#                  those with attribute value LESS THAN threshold
-#             Use the equation here: https://en.wikipedia.org/wiki/Information_gain_ratio
-#             And restrict your search for possible thresholds to examples with array index mod(step) == 0
-#     ========================================================================================================
-#     Output: This function returns the gain ratio and threshold value
-#     ========================================================================================================
-#     '''
-#     data_len = len(data_set)
-#     iterations = (data_len / steps) 
-#     if iterations == 0: #CHECK IF THIS IS CORRECT
-#         iterations = 1
-#     most_gain = 0 # keeps track of which split gives the least entropy
-#     split_index = None
-#     intrinsic = 0
-#     for i in range(iterations): # iterations of splitting data_set at indices i*step
-#         split_data = split_on_numerical(data_set, attribute, data_set[i*steps][attribute]) # splits data on i*step'th attribute
-#         entropy_1 = entropy(split_data[0])
-#         entropy_2 = entropy(split_data[1])
-#         fraction_1 = float(len(split_data[0]))/float(data_len)
-#         fraction_2 = float(len(split_data[1]))/float(data_len)
-#         gain = entropy(data_set) - fraction_1 * entropy_1 - fraction_2 * entropy_2
-#         if gain > most_gain:
-#             most_gain = gain
-#             split_index = i
-#             intrinsic = 0 - fraction_1 * math.log(fraction_1, 2) - fraction_2 * math.log(fraction_2, 2)
-#     return (most_gain/intrinsic, data_set[split_index*steps][attribute])
+    information_gain = entropy(data_set) - gain_sum
+    intrinsic_value = -intrinsic_value
+    if intrinsic_value != 0:
+        information_gain_ratio = information_gain/intrinsic_value
+    #print information_gain_ratio
+    return information_gain_ratio
 
 def gain_ratio_numeric(data_set, attribute, steps):
     '''
