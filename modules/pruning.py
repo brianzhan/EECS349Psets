@@ -9,14 +9,13 @@ def reduced_error_pruning(root,training_set,validation_set):
     You can implement this as you choose, but the goal is to remove some nodes such that doing so improves validation accuracy.
     NOTE you will probably not need to use the training set for your pruning strategy, but it's passed as an argument in the starter code just in case.
     '''
-    # NEED TO START FROM THE LEAF
     stack = []
     stack.append(root)
     num_pruned = 0 # number of nodes pruned
     while stack:
         subtree_nodes = [] # nodes to explore for each subtree
         node = stack.pop(0)
-        node_copy = deepcopy(node)
+        node_copy = deepcopy(node) # creates a copy of the original node in case the prune is not necessary
         old_validation = validation_accuracy(root, validation_set) # original accuracy before pruning the sub-tree
         # construct new subtree
         labels = [] # data set of all the labels under this subtree
@@ -54,28 +53,9 @@ def reduced_error_pruning(root,training_set,validation_set):
                     stack.insert(0, child)
                     subtree_nodes.insert(0, child)
     if num_pruned > 0:
+        # since we didn't start pruning from a leaf, this is a work around
         root = reduced_error_pruning(root, training_set, validation_set) # calls the pruning function again if a node was pruned
     return root
-
-    #     #### need to figure out how to set the value of this current node to its most popular value below it 
-    #     #make the change
-    #     new_validation = validation_accuracy(root,validation_set)
-    #     if (new_validation > old_validation):
-    #         node_pruned = counter
-    #     #restore the tree back to its old shape
-    #     counter += 1
-
-    # counter = 0
-    # stack.append(root)
-    # while len(stack) != 0:
-    #     tree = stack.pop(0)
-    #     for subtree in tree.children:
-    #         stack.insert(0,subtree)
-    #     if node_pruned == counter:
-    #         #prune the node here
-    #         print prune 
-    #         return   #return out of the function
-    #     counter += 1
 
 def validation_accuracy(tree,validation_set):
     '''
