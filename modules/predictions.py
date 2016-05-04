@@ -15,3 +15,10 @@ def create_predictions(tree, predict):
     Given a tree and a url to a data_set. Create a csv with a prediction for each result
     using the classify method in node class.
     '''
+    data,attributes = parse(predict, False)
+    for element in data:
+    	output[element] = tree.classify(element)
+
+    with open('some.csv', 'wb') as f:
+	    writer = csv.writer(f)
+	    writer.writerows(output)
