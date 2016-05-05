@@ -88,7 +88,7 @@ def pick_best_attribute(data_set, attribute_metadata, numerical_splits_count):
             gain_ratio = gain_ratio_nominal(data_set, i)
             gain_ratios[i] = (gain_ratio, False)
         else:
-            gain_ratio = gain_ratio_numeric(data_set, i, 1)
+            gain_ratio = gain_ratio_numeric(data_set, i, 5000)
             gain_ratios[i] = gain_ratio
     # go through each attribute's gain ratio and find the highest one
     for key, value in gain_ratios.iteritems(): 

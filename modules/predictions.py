@@ -16,16 +16,16 @@ def create_predictions(tree, predict):
     using the classify method in node class.
     '''
     data, attr = parse('/Users/brianzhan/Desktop/EECS349Psets/data/btrain.csv', False)
-	output = []
-	dict = [] # for storing the nodes
-	eNode
-	for eData in data:
-	    # create the node
-	    eNode = Node()
-	    eNode[element].data = tree.classify(eData)
-	for eAttr in attr:
-	    print "attribute is ", eAttr
-	    print "name is ", eAttr['name']
-	    eNode.name = eAttr['name']
-	    eNode.is_nominal = eAttr['is_nominal']
-	dict.append(eNode)
+    output = []
+    dict = [] # for storing the nodes
+    eNode = None
+    for eData in data:
+    	# create the node
+    	eNode = Node()
+    	eNode[element].data = tree.classify(eData)
+    for eAttr in attr:
+    	print "attribute is ", eAttr
+    	print "name is ", eAttr['name']
+    	eNode.name = eAttr['name']
+    	eNode.is_nominal = eAttr['is_nominal']
+    dict.append(eNode)
