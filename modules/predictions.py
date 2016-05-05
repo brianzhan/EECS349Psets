@@ -15,10 +15,17 @@ def create_predictions(tree, predict):
     Given a tree and a url to a data_set. Create a csv with a prediction for each result
     using the classify method in node class.
     '''
-    data,attributes = parse(predict, False)
-    for element in data:
-    	output[element] = tree.classify(element)
-
-    with open('some.csv', 'wb') as f:
-	    writer = csv.writer(f)
-	    writer.writerows(output)
+    data, attr = parse('/Users/brianzhan/Desktop/EECS349Psets/data/btrain.csv', False)
+	output = []
+	dict = [] # for storing the nodes
+	eNode
+	for eData in data:
+	    # create the node
+	    eNode = Node()
+	    eNode[element].data = tree.classify(eData)
+	for eAttr in attr:
+	    print "attribute is ", eAttr
+	    print "name is ", eAttr['name']
+	    eNode.name = eAttr['name']
+	    eNode.is_nominal = eAttr['is_nominal']
+	dict.append(eNode)
