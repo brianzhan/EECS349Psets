@@ -65,6 +65,7 @@ def validation_accuracy(tree,validation_set):
     correct_count = 0 # correctly classified
     total = 0
     for data in validation_set:
+        print "data is: " + str(data)
         classification = tree.classify(data)
         if classification == data[0]: # if correctly classified
             correct_count += 1

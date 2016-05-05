@@ -22,7 +22,7 @@
 
 def check_dnf():
     n0 = Node()
-    n0.label = 0
+    n0.children = {1: n2, 2: n3}
 
     n1 = Node()
     n1.label = 1
@@ -82,7 +82,10 @@ class Node:
             #print instance[self.decision_attribute]
             #print 'i am here'
             #print instance[self.decision_attribute]
-            return self.children[instance[self.decision_attribute]].classify(instance)
+            try:
+                return self.children[instance[self.decision_attribute]].classify(instance)
+            except KeyError:
+                return 0 # WILL NEED TO CHANGE THIS
         else:            #numerical 
             if instance[self.decision_attribute] < self.splitting_value and self.children[0] != None:
                 # print "classifying numerical, classifying children of ", self.children
@@ -139,9 +142,6 @@ class Node:
                 leftStr = path + " AND " + str(current.children[1].label)
                 s.append(current.children[1])
                 s.append(leftStr)
-
-
-
 
     def old_print_dnf(self):
         '''
