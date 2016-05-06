@@ -21,25 +21,21 @@
 # name - name of the attribute being split on
 
 def check_dnf():
+    nx = Node()
     n0 = Node()
-    n0.children = {1: n2, 2: n3}
-
     n1 = Node()
-    n1.label = 1
-
     n2 = Node()
-    n2.label = 2
-
     n3 = Node()
-    n3.label = 3
-
-    n = Node()
-    n.label = 5
-    n.decision_attribute = 1
-    n.is_nominal = True
-    n.children = {0: n0, 1: n1}
+    nx.decision_attribute = 1
+    n1.decision_attribute = 1
+    n2.decision_attribute = 1
+    n3.decision_attribute = 1
+    n0.decision_attribute = 1
+    n0.children = {1: n2, 2: n3}
+    #n.is_nominal = True
+    nx.children = {0: n0, 1: n1}
     n0.children = {0: n2, 1: n3}
-    n.print_dnf_tree()
+    nx.print_dnf_tree()
 """
                 n
                / \ 
@@ -85,8 +81,13 @@ class Node:
             try:
                 return self.children[instance[self.decision_attribute]].classify(instance)
             except KeyError:
+                print "\n\n\n threw key error \n\n\n"
                 return 0 # WILL NEED TO CHANGE THIS
-        else:            #numerical 
+        else:
+            if self.decision_attribute is None:
+                print "decision attribute was none"
+                return None
+                    #numerical 
             if instance[self.decision_attribute] < self.splitting_value and self.children[0] != None:
                 # print "classifying numerical, classifying children of ", self.children
                 # print "instance is ", instance
@@ -115,7 +116,7 @@ class Node:
         current = self
         s = []
         s.append(current)
-        s.append(str(current.label))
+        s.append(str(current.decision_attribute))
         while s and s != []: # s is empty
             path = s.pop()
             current = s.pop()
@@ -134,42 +135,16 @@ class Node:
 
             if leftChild is 0 and rightChild is 0:
                 print path, " OR "
-            if leftChild is 1:
-                rightStr = path + " AND " +str(current.children[0].label)
+            if leftChild is 1 and current.children[0].decision_attribute is 1:
+                rightStr = path + " AND " +str(current.children[0].decision_attribute)
                 s.append(current.children[0])
                 s.append(rightStr)
-            if rightChild is 1:
-                leftStr = path + " AND " + str(current.children[1].label)
+            if rightChild is 1 and current.children[1].decision_attribute is 1:
+                leftStr = path + " AND " + str(current.children[1].decision_attribute)
                 s.append(current.children[1])
                 s.append(leftStr)
 
-    def old_print_dnf(self):
-        '''
-        returns the disjunct normalized form of the tree.
-        '''
-        # handle tree end exceptions
-        leftChild=1
-        rightChild=1
-        try:
-            self.children[0]
-        except KeyError:
-            leftChild = 0
-        try:
-            self.children[1]
-        except KeyError:
-            rightChild = 0
-        # print trees
-        if leftChild is 0 and rightChild is 0:
-            print self.label, " OR "
-        else:
-            print self.label, " AND ",
 
-        if leftChild is 1 and self.children[0] != {}:
-            newChild = self.children[0]
-            newChild.print_dnf_tree()
-        if rightChild is 1 and self.children[1] != {}:
-            newChild = self.children[1]
-            newChild.print_dnf_tree()
 
 def main():
     check_dnf()
