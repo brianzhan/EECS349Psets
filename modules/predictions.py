@@ -15,7 +15,7 @@ def create_predictions(tree, predict):
     Given a tree and a url to a data_set. Create a csv with a prediction for each result
     using the classify method in node class.
     '''
-    data, attr = parse('/Users/brianzhan/Desktop/EECS349Psets/data/btrain.csv', False)
+    data, attr = parse(predict, False)
     output = []
     dict = [] # for storing the nodes
     eNode = None

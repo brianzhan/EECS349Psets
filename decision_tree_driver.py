@@ -53,23 +53,23 @@ def decision_tree_driver(train, validate = False, predict = False, prune = False
         reduced_error_pruning(tree,train_set,pruning_set)
         print ''
 
-    # print tree visually
-    if print_tree:
-        print '###\n#  Decision Tree\n###'
-        cursor = open('./output/tree.txt','w+')
-        cursor.write(tree.print_tree())
-        cursor.close()
-        print 'Decision Tree written to /output/tree'
-        print ''
+    # # print tree visually
+    # if print_tree:
+    #     print '###\n#  Decision Tree\n###'
+    #     cursor = open('./output/tree.txt','w+')
+    #     cursor.write(tree.print_tree())
+    #     cursor.close()
+    #     print 'Decision Tree written to /output/tree'
+    #     print ''
 
-    # print tree in disjunctive normalized form
-    if print_dnf:
-        print '###\n#  Decision Tree as DNF\n###'
-        cursor = open('./output/DNF.txt','w+')
-        cursor.write(tree.print_dnf_tree())
-        cursor.close()
-        print 'Decision Tree written to /output/DNF'
-        print ''
+    # # print tree in disjunctive normalized form
+    # if print_dnf:
+    #     print '###\n#  Decision Tree as DNF\n###'
+    #     cursor = open('./output/DNF.txt','w+')
+    #     cursor.write(tree.print_dnf_tree())
+    #     cursor.close()
+    #     print 'Decision Tree written to /output/DNF'
+    #     print ''
 
     # test tree accuracy on validation set
     if validate != False:
