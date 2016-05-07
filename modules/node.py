@@ -81,11 +81,13 @@ class Node:
             try:
                 return self.children[instance[self.decision_attribute]].classify(instance)
             except KeyError:
-                print "\n\n\n threw key error \n\n\n"
-                return 0 # WILL NEED TO CHANGE THIS
+                # print "\n\n\n threw key error \n\n\n"
+                # if children is not found in children, use mode of the examples at this node instead
+                for key in self.children:
+                    return self.children[key].classify(instance) # STILL NEED TO RETURN MODE INSTEAD OF FIRST CHILD
         else:
             if self.decision_attribute is None:
-                print "decision attribute was none"
+                # print "decision attribute was none"
                 return None
                     #numerical 
             if instance[self.decision_attribute] < self.splitting_value and self.children[0] != None:
@@ -99,22 +101,22 @@ class Node:
                 # print "classify failed, returning none"
                 return None
 
-     def print_tree(self):
+    def print_tree(self):
         thislevel = [self]
         while thislevel:
             nextlevel = list()
             for n in thislevel:
                 leftChild = 1
                 rightChild = 1
-                print n.decision_attribute,
+                print n.label,
 
                 try:
                     n.children[0]
-                except KeyError:
+                except (KeyError, TypeError):
                     leftChild = 0
                 try:
                     n.children[1]
-                except KeyError:
+                except (KeyError, TypeError):
                     rightChild = 0
 
                 if leftChild is 1 and n.children[0]:

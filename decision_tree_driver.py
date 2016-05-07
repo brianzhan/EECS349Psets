@@ -79,19 +79,19 @@ def decision_tree_driver(train, validate = False, predict = False, prune = False
         print "Accuracy on validation set: " + str(accuracy)
         print ''
 
-    # generate predictions on the test set
-    if predict != False:
-        print '###\n#  Generating Predictions on Test Set\n###'
-        create_predictions(tree, predict)
-        print ''
+    # # generate predictions on the test set
+    # if predict != False:
+    #     print '###\n#  Generating Predictions on Test Set\n###'
+    #     create_predictions(tree, predict)
+    #     print ''
 
-    # generate a learning curve using the validation set
-    if learning_curve and validate:
-        print '###\n#  Generating Learning Curve\n###'
-        iterations = 20 # number of times to test each size
-        get_graph(train_set, attribute_metadata, validate_set, 
-            numerical_splits_count, depth, 5, 0, learning_curve['upper_bound'],
-            learning_curve['increment'])
-        print ''
+    # # generate a learning curve using the validation set
+    # if learning_curve and validate:
+    #     print '###\n#  Generating Learning Curve\n###'
+    #     iterations = 20 # number of times to test each size
+    #     get_graph(train_set, attribute_metadata, validate_set, 
+    #         numerical_splits_count, depth, 5, 0, learning_curve['upper_bound'],
+    #         learning_curve['increment'])
+    #     print ''
 
 tree = decision_tree_driver( **options )

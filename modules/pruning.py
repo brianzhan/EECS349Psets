@@ -11,46 +11,64 @@ def reduced_error_pruning(root,training_set,validation_set):
     '''
     stack = []
     stack.append(root)
+    old_validation = validation_accuracy(root, validation_set) # original accuracy before pruning the sub-tree
     while stack:
-        subtree_nodes = [] # nodes to explore for each subtree
         node = stack.pop(0)
+        print "old tree"
+        root.print_tree()
+        subtree_nodes = [node] # nodes to explore for each subtree
         node_copy = deepcopy(node) # creates a copy of the original node in case the prune is not necessary
-        old_validation = validation_accuracy(root, validation_set) # original accuracy before pruning the sub-tree
         # construct new subtree
         labels = [] # data set of all the labels under this subtree
         while subtree_nodes:
             tree_node = subtree_nodes.pop(0)
             if tree_node.label is not None: # if node is a leaf
                 labels.append([tree_node.label])
-            elif tree_node.is_nominal:
-                for key, child in tree_node.children:
-                    subtree_nodes.insert(0, child)
             else:
-                for child in tree_node.children: # add children to stack (might have to check if nominal or not)
-                    subtree_nodes.insert(0, child)
+                for key, child in tree_node.children.iteritems():
+                    subtree_nodes.append(child)
         # prune the tree at this node
         label = mode(labels)
+        # make copies of old node stuff
+        old_label = deepcopy(node.label)
+        old_children = deepcopy(node.children)
+        old_decision_attribute = deepcopy(node.decision_attribute)
+        old_is_nominal = deepcopy(node.is_nominal)
+        old_splitting_value = deepcopy(node.splitting_value)
+        old_name = deepcopy(node.name)
+        # set current node as leaf 
         node.label  = label
         node.children = None
         node.decision_attribute = None
         node.is_nominal = None
         node.splitting_value = None
         node.name = None
+        print "new tree"
+        root.print_tree()
         new_validation = validation_accuracy(root, validation_set) # get the validation accuracy of the new tree
-        if new_validation >= old_validation: # keep the prune if new validation is higher than old
-            return root
+        print "old validation acc " + str(old_validation)
+        print "new validation acc " + str(new_validation)
+        if new_validation - old_validation >= 0.000001: # keep the prune if new validation is higher than old
+            return
         else:
-            node = node_copy # revert pruning
+            print "changes reverted"
+            # revert pruning
+            node.label  = old_label
+            node.children = old_children
+            node.decision_attribute = old_decision_attribute
+            node.is_nominal = old_is_nominal
+            node.splitting_value = old_splitting_value
+            node.name = old_name
         # then add the children of this node to the stack if it was not pruned
         if node.children is not None:
-            if node.is_nominal:
-                for key, child in node.children.iteritems():
-                    stack.append(child)
-                    subtree_nodes.insert(0, child)
-            else:
-                for key, child in node.children.iteritems(): # add children to stack (might have to check if nominal or not)
-                    stack.append(child)
-                    subtree_nodes.insert(0, child)
+            # if node.is_nominal:
+            for key, child in node.children.iteritems():
+                stack.append(child)
+                    # subtree_nodes.insert(0, child)
+            # else:
+            #     for child in node.children: # add children to stack (might have to check if nominal or not)
+            #         stack.append(child)
+            #         # subtree_nodes.insert(0, child)
 
 # def reduced_error_pruning(root,training_set,validation_set):
 #     '''
@@ -114,7 +132,7 @@ def validation_accuracy(tree,validation_set):
     correct_count = 0 # correctly classified
     total = 0
     for data in validation_set:
-        print "data is: " + str(data)
+        # print "data is: " + str(data)
         classification = tree.classify(data)
         if classification == data[0]: # if correctly classified
             correct_count += 1
