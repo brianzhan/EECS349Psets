@@ -79,11 +79,11 @@ def decision_tree_driver(train, validate = False, predict = False, prune = False
         print "Accuracy on validation set: " + str(accuracy)
         print ''
 
-    # # generate predictions on the test set
-    # if predict != False:
-    #     print '###\n#  Generating Predictions on Test Set\n###'
-    #     create_predictions(tree, predict)
-    #     print ''
+    # generate predictions on the test set
+    if predict != False:
+        print '###\n#  Generating Predictions on Test Set\n###'
+        create_predictions(tree, predict)
+        print ''
 
     # # generate a learning curve using the validation set
     # if learning_curve and validate:

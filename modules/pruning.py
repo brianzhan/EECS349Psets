@@ -11,8 +11,9 @@ def reduced_error_pruning(root,training_set,validation_set):
     '''
     stack = []
     stack.append(root)
-    old_validation = validation_accuracy(root, validation_set) # original accuracy before pruning the sub-tree
+    num_pruned = 0
     while stack:
+        old_validation = validation_accuracy(root, validation_set) # original accuracy before pruning the sub-tree
         node = stack.pop(0)
         print "old tree"
         root.print_tree()
@@ -48,8 +49,8 @@ def reduced_error_pruning(root,training_set,validation_set):
         new_validation = validation_accuracy(root, validation_set) # get the validation accuracy of the new tree
         print "old validation acc " + str(old_validation)
         print "new validation acc " + str(new_validation)
-        if new_validation - old_validation >= 0.000001: # keep the prune if new validation is higher than old
-            return
+        if new_validation > old_validation: # keep the prune if new validation is higher than old
+            num_pruned += 1
         else:
             print "changes reverted"
             # revert pruning
@@ -64,11 +65,10 @@ def reduced_error_pruning(root,training_set,validation_set):
             # if node.is_nominal:
             for key, child in node.children.iteritems():
                 stack.append(child)
-                    # subtree_nodes.insert(0, child)
-            # else:
-            #     for child in node.children: # add children to stack (might have to check if nominal or not)
-            #         stack.append(child)
-            #         # subtree_nodes.insert(0, child)
+    # continue pruning
+    if num_pruned > 0:
+        reduced_error_pruning(root,training_set,validation_set)
+
 
 # def reduced_error_pruning(root,training_set,validation_set):
 #     '''

@@ -1,6 +1,9 @@
 import os.path
+from node import Node
 from operator import xor
 from parse import *
+import csv
+
 
 # DOCUMENTATION
 # ========================================
@@ -15,17 +18,32 @@ def create_predictions(tree, predict):
     Given a tree and a url to a data_set. Create a csv with a prediction for each result
     using the classify method in node class.
     '''
-    data, attr = parse(predict, False)
-    output = []
-    dict = [] # for storing the nodes
-    eNode = None
-    for eData in data:
-    	# create the node
-    	eNode = Node()
-    	eNode[element].data = tree.classify(eData)
-    for eAttr in attr:
-    	print "attribute is ", eAttr
-    	print "name is ", eAttr['name']
-    	eNode.name = eAttr['name']
-    	eNode.is_nominal = eAttr['is_nominal']
-    dict.append(eNode)
+    print "print tree"
+    tree.print_tree()
+    winners = []
+    # read 13 columns
+    with open(predict, 'rb') as f:
+    	reader = csv.reader(f)
+    	for row in reader:
+    		data = []
+    		for item in row[:-1]:
+    			try:
+    				data.append(float(item))
+    			except:
+    				data.append(item)
+    		data.insert(0, "?") # inserting ? in beginning of each data (place-holder for winner)
+    		# print data
+    		winner = tree.classify(data)
+    		winners.append(winner)
+	with open("predictions.csv",'wb') as wf:
+   	# Using dictionary keys as fieldnames for the CSV file header
+	   writer = csv.writer(wf, dialect='excel')
+	   for winner in winners:
+	   		writer.writerow([winner])
+	# print winners
+
+
+
+
+
+
