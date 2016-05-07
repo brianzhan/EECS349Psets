@@ -99,13 +99,30 @@ class Node:
                 # print "classify failed, returning none"
                 return None
 
-    def print_tree(self, indent = 0):
-        '''
-        returns a string of the entire tree in human readable form
-        '''
-        # Your code here
-        pass
+     def print_tree(self):
+        thislevel = [self]
+        while thislevel:
+            nextlevel = list()
+            for n in thislevel:
+                leftChild = 1
+                rightChild = 1
+                print n.decision_attribute,
 
+                try:
+                    n.children[0]
+                except KeyError:
+                    leftChild = 0
+                try:
+                    n.children[1]
+                except KeyError:
+                    rightChild = 0
+
+                if leftChild is 1 and n.children[0]:
+                    nextlevel.append(n.children[0])
+                if rightChild is 1 and n.children[1]:
+                    nextlevel.append(n.children[1])
+            print
+            thislevel = nextlevel
 
 
 
