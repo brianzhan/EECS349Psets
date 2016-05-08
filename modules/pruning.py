@@ -15,8 +15,8 @@ def reduced_error_pruning(root,training_set,validation_set):
     while stack:
         old_validation = validation_accuracy(root, validation_set) # original accuracy before pruning the sub-tree
         node = stack.pop(0)
-        print "old tree"
-        root.print_tree()
+        # print "old tree"
+        # root.print_tree()
         subtree_nodes = [node] # nodes to explore for each subtree
         node_copy = deepcopy(node) # creates a copy of the original node in case the prune is not necessary
         # construct new subtree
