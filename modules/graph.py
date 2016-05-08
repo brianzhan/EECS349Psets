@@ -7,6 +7,7 @@ import os.path
 from pruning import validation_accuracy
 from copy import *
 import numpy as np
+from modules.pruning import *
 
 # NOTE: these functions are just for your reference, you will NOT be graded on their output
 # so you can feel free to implement them as you choose, or not implement them at all if you want
@@ -21,6 +22,7 @@ def get_graph_accuracy_partial(train_set, attribute_metadata, validate_set, nume
     train_num = float(total_data)*pct # amount of data to train on
     pct_train_set = random.sample(train_set, int(train_num))
     tree = ID3(pct_train_set, attribute_metadata, numerical_splits_count, 20)
+    reduced_error_pruning(tree, pct_train_set, validate_set)
     # tree.print_tree()
     accuracy = validation_accuracy(tree, validate_set)
     print str(pct) + ": " + str(accuracy)

@@ -95,7 +95,7 @@ def decision_tree_driver(train, validate = False, predict = False, prune = False
         print '###\n#  Generating Learning Curve\n###'
         iterations = 10 # number of times to test each size
         splits = deepcopy(numerical_splits_count)
-        print get_graph_data(train_set, attribute_metadata, validate_set, splits, iterations, [0.7])
+        print get_graph_data(train_set, attribute_metadata, validate_set, splits, iterations, [0.1])
         # splits = deepcopy(numerical_splits_count)
         # get_graph(train_set, attribute_metadata, validate_set, 
         #     splits, depth, 5, 0, learning_curve['upper_bound'],

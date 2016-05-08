@@ -44,15 +44,15 @@ def reduced_error_pruning(root,training_set,validation_set):
         node.is_nominal = None
         node.splitting_value = None
         node.name = None
-        print "new tree"
-        root.print_tree()
+        # print "new tree"
+        # root.print_tree()
         new_validation = validation_accuracy(root, validation_set) # get the validation accuracy of the new tree
-        print "old validation acc " + str(old_validation)
-        print "new validation acc " + str(new_validation)
+        # print "old validation acc " + str(old_validation)
+        # print "new validation acc " + str(new_validation)
         if new_validation > old_validation: # keep the prune if new validation is higher than old
             num_pruned += 1
         else:
-            print "changes reverted"
+            # print "changes reverted"
             # revert pruning
             node.label  = old_label
             node.children = old_children
