@@ -1,6 +1,7 @@
 import math
 from node import Node
 import sys
+from copy import *
 
 def ID3(data_set, attribute_metadata, numerical_splits_count, depth):
     '''
@@ -34,22 +35,23 @@ def ID3(data_set, attribute_metadata, numerical_splits_count, depth):
     else: # best_attribute is nominal
         split_data = split_on_nominal(data_set, best_attribute) # returns a dictionary with nominal attributes as keys
         node.is_nominal = True # node is nominal
+        split_data_copy = deepcopy(split_data) # deep copy split_data
         ### filling in missing data ###
-        for key in split_data.keys(): 
+        for key in split_data_copy.keys():
             if key is None: 
                 # find most common attribute and add the missing attribute data into the most common attribute
                 greatest_length = -1
                 mode_att = None
-                for att, data in split_data.iteritems():
+                for att, data in split_data_copy.iteritems():
                     if len(data) > greatest_length:
                         greatest_length = len(data)
                         mode_att = att
-                for data in split_data[key]:
-                    split_data[mode_att].append(data) # adds all the None data into the mode attribute 
-                split_data.pop(key, None) # removes the None attribute data
+                for data in split_data_copy[key]:
+                    split_data_copy[mode_att].append(data) # adds all the None data into the mode attribute 
+                split_data_copy.pop(key, None) # removes the None attribute data
         # add a children for each nominal attribute
-        for key in split_data: 
-            node.children[key] = ID3(split_data[key], attribute_metadata, numerical_splits_count, depth - 1)
+        for key in split_data_copy: 
+            node.children[key] = ID3(split_data_copy[key], attribute_metadata, numerical_splits_count, depth - 1)
         node.name = attribute_metadata[best_attribute]['name']
         node.decision_attribute = best_attribute
     # print node.children

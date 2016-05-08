@@ -41,18 +41,18 @@ def decision_tree_driver(train, validate = False, predict = False, prune = False
     else:
         depth = float("inf")
 
-    # print "###\n#  Training Tree\n###"
+    print "###\n#  Training Tree\n###"
 
-    # splits = deepcopy(numerical_splits_count)
-    # # call the ID3 classification algorithm with the appropriate options
-    # tree = ID3(train_set, attribute_metadata, splits, depth)
-    # print '\n'
-    # # call reduced error pruning using the pruning set
-    # if prune != False:
-    #     print '###\n#  Pruning\n###'
-    #     pruning_set, _ = parse(prune, False)
-    #     reduced_error_pruning(tree,train_set,pruning_set)
-    #     print ''
+    splits = deepcopy(numerical_splits_count)
+    # call the ID3 classification algorithm with the appropriate options
+    tree = ID3(train_set, attribute_metadata, splits, depth)
+    print '\n'
+    # call reduced error pruning using the pruning set
+    if prune != False:
+        print '###\n#  Pruning\n###'
+        pruning_set, _ = parse(prune, False)
+        reduced_error_pruning(tree,train_set,pruning_set)
+        print ''
 
     # # print tree visually
     # if print_tree:
@@ -73,13 +73,13 @@ def decision_tree_driver(train, validate = False, predict = False, prune = False
     #     print ''
 
     # test tree accuracy on validation set
-    # if validate != False:
-    #     print '###\n#  Validating\n###'
-    #     validate_set, _ = parse(validate, False)
-    #     accuracy = validation_accuracy(tree,validate_set)
-    #     print "Accuracy on validation set: " + str(accuracy)
-    #     print ''
-    validate_set, _ = parse(validate, False)
+    if validate != False:
+        print '###\n#  Validating\n###'
+        validate_set, _ = parse(validate, False)
+        accuracy = validation_accuracy(tree,validate_set)
+        print "Accuracy on validation set: " + str(accuracy)
+        print ''
+
     # generate predictions on the test set
     # if predict != False:
     #     print '###\n#  Generating Predictions on Test Set\n###'
@@ -91,15 +91,15 @@ def decision_tree_driver(train, validate = False, predict = False, prune = False
     #     print ''
 
     # generate a learning curve using the validation set
-    if learning_curve and validate:
-        print '###\n#  Generating Learning Curve\n###'
-        iterations = 10 # number of times to test each size
-        splits = deepcopy(numerical_splits_count)
-        print get_graph_data(train_set, attribute_metadata, validate_set, splits, iterations, [0.1])
-        # splits = deepcopy(numerical_splits_count)
-        # get_graph(train_set, attribute_metadata, validate_set, 
-        #     splits, depth, 5, 0, learning_curve['upper_bound'],
-        #     learning_curve['increment'])
-        print ''
+    # if learning_curve and validate:
+    #     print '###\n#  Generating Learning Curve\n###'
+    #     iterations = 10 # number of times to test each size
+    #     splits = deepcopy(numerical_splits_count)
+    #     print get_graph_data(train_set, attribute_metadata, validate_set, splits, iterations, [0.7])
+    #     # splits = deepcopy(numerical_splits_count)
+    #     # get_graph(train_set, attribute_metadata, validate_set, 
+    #     #     splits, depth, 5, 0, learning_curve['upper_bound'],
+    #     #     learning_curve['increment'])
+    #     print ''
 
 tree = decision_tree_driver( **options )
