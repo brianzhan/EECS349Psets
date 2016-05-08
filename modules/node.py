@@ -19,6 +19,7 @@
 # splitting_value - if numeric, where to split
 #
 # name - name of the attribute being split on  
+from copy import *
 
 class Node:
     def __init__(self):
@@ -82,79 +83,35 @@ class Node:
             print
             thislevel = nextlevel
 
+    def print_dnf_tree(self):
+        '''
+        returns the disjunct normalized form of the tree.
+        '''
+        self.print_dnf_tree_recurse(self)
 
-
-    # def print_dnf_tree(self):
-    #     '''
-    #     returns the disjunct normalized form of the tree.
-    #     '''
-    #     s = []
-    #     s.append(self)
-    #     lineage = []
-    #     while s:
-    #         node = s.pop(0)
-    #         lineage.append(node.name)
-    #         if node.label is not None:
-    #             if node.label == 1:
-    #                 print lineage
-    #             else:
-    #                 lineage = []
-
-    #         try:
-    #             current.children[0]
-    #         except KeyError:
-    #             leftChild = 0
-    #         try:
-    #             current.children[1]
-    #         except KeyError:
-    #             rightChild = 0
-
-    #         if leftChild is 0 and rightChild is 0:
-    #             print path, " OR "
-    #         if leftChild is 1 and current.children[0].decision_attribute is 1:
-    #             rightStr = path + " AND " +str(current.children[0].decision_attribute)
-    #             s.append(current.children[0])
-    #             s.append(rightStr)
-    #         if rightChild is 1 and current.children[1].decision_attribute is 1:
-    #             leftStr = path + " AND " + str(current.children[1].decision_attribute)
-    #             s.append(current.children[1])
-    #             s.append(leftStr)  
-
-
-
-    #     current = self
-    #     s = []
-    #     s.append(current)
-    #     s.append(str(current.decision_attribute))
-    #     while s and s != []: # s is empty
-    #         path = s.pop()
-    #         current = s.pop()
-
-    #         # find out whether childs exist
-    #         leftChild=1
-    #         rightChild=1
-    #         try:
-    #             current.children[0]
-    #         except KeyError:
-    #             leftChild = 0
-    #         try:
-    #             current.children[1]
-    #         except KeyError:
-    #             rightChild = 0
-
-    #         if leftChild is 0 and rightChild is 0:
-    #             print path, " OR "
-    #         if leftChild is 1 and current.children[0].decision_attribute is 1:
-    #             rightStr = path + " AND " +str(current.children[0].decision_attribute)
-    #             s.append(current.children[0])
-    #             s.append(rightStr)
-    #         if rightChild is 1 and current.children[1].decision_attribute is 1:
-    #             leftStr = path + " AND " + str(current.children[1].decision_attribute)
-    #             s.append(current.children[1])
-    #             s.append(leftStr)
-
-
-
-
-
-
+    def print_dnf_tree_recurse(self, node, lineage=[]):
+        new_lineage = deepcopy(lineage)
+        if node.label is not None:
+            if node.label == 1:
+                print "(",
+                for name in new_lineage[:-1]:
+                    print str(name) + " AND",
+                print new_lineage[-1] + " )"
+                print "OR"
+        else:
+            if not node.is_nominal:
+                new_lineage1 = deepcopy(lineage)
+                new_lineage1.append(str(node.name) + " < " + str(node.splitting_value))
+                if new_lineage1 is not None:
+                    self.print_dnf_tree_recurse(node.children[0], new_lineage1)
+                new_lineage2 = deepcopy(lineage)
+                new_lineage2.append(str(node.name) + " > " + str(node.splitting_value))
+                if new_lineage2 is not None:
+                    self.print_dnf_tree_recurse(node.children[1], new_lineage2)
+            else:
+                for key, child in node.children.iteritems():
+                    new_lineage = deepcopy(lineage)
+                    if child.name is not None:
+                        new_lineage.append(str(child.name))
+                    self.print_dnf_tree_recurse(child, new_lineage)
+        
