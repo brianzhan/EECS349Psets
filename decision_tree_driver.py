@@ -12,7 +12,7 @@ from copy import *
 #   options can be found in README.md
 
 options = {
-    'train' : 'data/btrain.csv',
+    'train' : 'data/test_btrain.csv',
     'validate': 'data/bvalidate.csv',
     'predict': 'data/btest.csv',
     'limit_splits_on_numerical': 5,
@@ -46,12 +46,15 @@ def decision_tree_driver(train, validate = False, predict = False, prune = False
     splits = deepcopy(numerical_splits_count)
     # call the ID3 classification algorithm with the appropriate options
     tree = ID3(train_set, attribute_metadata, splits, depth)
+    tree.print_tree()
     print '\n'
+
     # call reduced error pruning using the pruning set
     if prune != False:
         print '###\n#  Pruning\n###'
         pruning_set, _ = parse(prune, False)
         reduced_error_pruning(tree,train_set,pruning_set)
+        tree.print_tree()
         print ''
 
     # # print tree visually
