@@ -51,15 +51,15 @@ def decision_tree_driver(train, validate = False, predict = False, prune = False
     print '\n'
 
     # call reduced error pruning using the pruning set
-    if prune != False:
-        print '###\n#  Pruning\n###'
-        pruning_set, _ = parse(prune, False)
-        reduced_error_pruning(tree,train_set,pruning_set)
-        tree.print_tree()
-        tree.print_dnf_tree()
-        print ''
+    # if prune != False:
+    #     print '###\n#  Pruning\n###'
+    #     pruning_set, _ = parse(prune, False)
+    #     reduced_error_pruning(tree,train_set,pruning_set)
+    #     tree.print_tree()
+    #     # tree.print_dnf_tree()
+    #     print ''
 
-    # # print tree visually
+    # print tree visually
     # if print_tree:
     #     print '###\n#  Decision Tree\n###'
     #     cursor = open('./output/tree.txt','w+')
@@ -78,12 +78,12 @@ def decision_tree_driver(train, validate = False, predict = False, prune = False
     #     print ''
 
     # test tree accuracy on validation set
-    if validate != False:
-        print '###\n#  Validating\n###'
-        validate_set, _ = parse(validate, False)
-        accuracy = validation_accuracy(tree,validate_set)
-        print "Accuracy on validation set: " + str(accuracy)
-        print ''
+    # if validate != False:
+    #     print '###\n#  Validating\n###'
+    #     validate_set, _ = parse(validate, False)
+    #     accuracy = validation_accuracy(tree,validate_set)
+    #     print "Accuracy on validation set: " + str(accuracy)
+    #     print ''
 
     # generate predictions on the test set
     # if predict != False:

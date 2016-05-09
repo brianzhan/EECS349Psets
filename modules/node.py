@@ -105,13 +105,13 @@ class Node:
                 if new_lineage1 is not None:
                     self.print_dnf_tree_recurse(node.children[0], new_lineage1)
                 new_lineage2 = deepcopy(lineage)
-                new_lineage2.append(str(node.name) + " > " + str(node.splitting_value))
+                new_lineage2.append(str(node.name) + " >= " + str(node.splitting_value))
                 if new_lineage2 is not None:
                     self.print_dnf_tree_recurse(node.children[1], new_lineage2)
             else:
                 for key, child in node.children.iteritems():
                     new_lineage = deepcopy(lineage)
-                    if child.name is not None:
-                        new_lineage.append(str(child.name))
+                    if new_lineage is not None:
+                        new_lineage.append(str(node.name) + "=" + str(key))
                     self.print_dnf_tree_recurse(child, new_lineage)
         
